@@ -2,254 +2,283 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FutureDesk Proposal Generator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            900: '#1e3a8a',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FutureDesk Proposal Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f0f9ff",
+              100: "#e0f2fe",
+              500: "#3b82f6",
+              600: "#2563eb",
+              700: "#1d4ed8",
+              900: "#1e3a8a",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
 
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
 
-        /* Proposal Typography */
-        #proposalOutput h1 {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.025em;
-        }
+    /* Proposal Typography */
+    #proposalOutput h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.025em;
+    }
 
-        #proposalOutput h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #334155;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            letter-spacing: -0.025em;
-        }
+    #proposalOutput h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.025em;
+    }
 
-        #proposalOutput h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #475569;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
+    #proposalOutput h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
 
-        #proposalOutput p,
-        #proposalOutput li {
-            font-size: 1rem;
-            line-height: 1.75;
-            color: #334155;
-            margin-bottom: 1rem;
-        }
+    #proposalOutput p,
+    #proposalOutput li {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: #334155;
+      margin-bottom: 1rem;
+    }
 
-        #proposalOutput ul,
-        #proposalOutput ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1.5rem;
-            list-style-type: disc;
-        }
-    </style>
+    #proposalOutput ul,
+    #proposalOutput ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      list-style-type: disc;
+    }
+
+    /* PDF Pagination Logic */
+    .pdf-section {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin-bottom: 2rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    p,
+    li {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Ensure images don't get cut */
+    img {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      max-width: 100%;
+    }
+  </style>
 </head>
 
 <body class="flex flex-col min-h-screen bg-slate-50 text-slate-800">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <div class="flex items-center justify-between h-16 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div class="flex items-center space-x-3">
+        <!-- PDF LOGO (DO NOT REMOVE) -->
+        <img id="pdfLogo" src="futuredesk-logo.png" class="h-10 w-auto object-contain" alt="FutureDesk Logo" />
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div class="flex items-center justify-between h-16 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center space-x-3">
-                <img src="https://futuredesks.com/wp-content/uploads/2024/12/Untitled-design-58.png" class="w-auto h-10"
-                    alt="FutureDesk Logo">
-                <div>
-                    <h1 class="text-lg font-semibold leading-snug tracking-tight text-gray-800">Proposal Generator</h1>
-                    <p class="hidden text-xs font-medium text-gray-500 sm:block">Create professional client proposals
-                    </p>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-lg font-semibold leading-snug tracking-tight text-gray-800">
+            Proposal Generator
+          </h1>
+          <p class="hidden text-xs font-medium text-gray-500 sm:block">
+            Create professional client proposals
+          </p>
+        </div>
+      </div>
+      <div>
+        <a href="#" class="text-sm font-medium text-gray-500 transition-colors hover:text-brand-600">Documentation</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow w-full max-w-[1600px] px-4 py-8 mx-auto sm:px-6 lg:px-8">
+    <div class="grid h-full grid-cols-1 gap-8 lg:grid-cols-2">
+      <!-- Left Side: Form -->
+      <div class="space-y-6">
+        <div
+          class="flex flex-col justify-center h-full p-6 bg-white border border-gray-100 shadow-xl rounded-2xl md:p-8">
+          <h2 class="flex items-center mb-8 text-xl font-bold text-gray-900">
+            <span class="p-2 mr-3 rounded-lg bg-brand-50 text-brand-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+              </svg>
+            </span>
+            Project Details
+          </h2>
+
+          <form id="proposalForm" class="space-y-6">
+            <!-- Client Name -->
             <div>
-                <a href="#"
-                    class="text-sm font-medium text-gray-500 transition-colors hover:text-brand-600">Documentation</a>
+              <label for="clientName" class="block mb-2 text-sm font-semibold text-gray-800">Client Name</label>
+              <input type="text" id="clientName"
+                class="w-full px-4 py-3 transition-all border border-gray-200 outline-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                placeholder="e.g. Acme Corporation" required />
             </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow w-full max-w-[1600px] px-4 py-8 mx-auto sm:px-6 lg:px-8">
-        <div class="grid h-full grid-cols-1 gap-8 lg:grid-cols-2">
+            <!-- Project Requirements -->
+            <div>
+              <label for="projectNeeds" class="block mb-2 text-sm font-semibold text-gray-800">Project
+                Requirements</label>
+              <textarea id="projectNeeds" rows="6"
+                class="w-full px-4 py-3 transition-all border border-gray-200 outline-none resize-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                placeholder="Describe the project goals, deliverables, and specific needs..." required></textarea>
+            </div>
 
-            <!-- Left Side: Form -->
-            <div class="space-y-6">
-                <div
-                    class="flex flex-col justify-center h-full p-6 bg-white border border-gray-100 shadow-xl rounded-2xl md:p-8">
-                    <h2 class="flex items-center mb-8 text-xl font-bold text-gray-900">
-                        <span class="p-2 mr-3 rounded-lg bg-brand-50 text-brand-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
-                        </span>
-                        Project Details
-                    </h2>
-
-                    <form id="proposalForm" class="space-y-6">
-                        <!-- Client Name -->
-                        <div>
-                            <label for="clientName" class="block mb-2 text-sm font-semibold text-gray-800">Client
-                                Name</label>
-                            <input type="text" id="clientName"
-                                class="w-full px-4 py-3 transition-all border border-gray-200 outline-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                                placeholder="e.g. Acme Corporation" required>
-                        </div>
-
-                        <!-- Project Requirements -->
-                        <div>
-                            <label for="projectNeeds" class="block mb-2 text-sm font-semibold text-gray-800">Project
-                                Requirements</label>
-                            <textarea id="projectNeeds" rows="6"
-                                class="w-full px-4 py-3 transition-all border border-gray-200 outline-none resize-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                                placeholder="Describe the project goals, deliverables, and specific needs..."
-                                required></textarea>
-                        </div>
-
-                        <!-- Timeline & Budget -->
-                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            <div>
-                                <label for="timeline"
-                                    class="block mb-2 text-sm font-semibold text-gray-800">Timeline</label>
-                                <input type="text" id="timeline"
-                                    class="w-full px-4 py-3 transition-all border border-gray-200 outline-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                                    placeholder="e.g. 6 Weeks" required>
-                            </div>
-                            <div>
-                                <label for="budget"
-                                    class="block mb-2 text-sm font-semibold text-gray-800">Budget</label>
-                                <div class="relative">
-                                    <span class="absolute font-medium text-gray-500 left-4 top-3.5">$</span>
-                                    <input type="number" id="budget"
-                                        class="w-full py-3 pr-4 transition-all border border-gray-200 outline-none pl-8 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                                        placeholder="10,000" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="pt-4">
-                            <button type="submit" id="generateBtn"
-                                class="flex items-center justify-center w-full px-6 py-4 text-lg font-bold text-white transition-all duration-200 bg-brand-600 rounded-xl hover:bg-brand-700 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-100">
-                                <span>Generate Proposal</span>
-                                <svg id="btnIcon" class="w-5 h-5 ml-2.5" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
-                                <svg id="loadingSpinner" class="hidden w-5 h-5 ml-2 text-white animate-spin"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
-                            </button>
-                        </div>
-                    </form>
+            <!-- Timeline & Budget -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label for="timeline" class="block mb-2 text-sm font-semibold text-gray-800">Timeline</label>
+                <input type="text" id="timeline"
+                  class="w-full px-4 py-3 transition-all border border-gray-200 outline-none rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                  placeholder="e.g. 6 Weeks" required />
+              </div>
+              <div>
+                <label for="budget" class="block mb-2 text-sm font-semibold text-gray-800">Budget</label>
+                <div class="relative">
+                  <span class="absolute font-medium text-gray-500 left-4 top-3.5">$</span>
+                  <input type="number" id="budget"
+                    class="w-full py-3 pr-4 transition-all border border-gray-200 outline-none pl-8 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+                    placeholder="10,000" required />
                 </div>
+              </div>
             </div>
 
-            <!-- Right Side: Output -->
-            <div class="flex flex-col h-full">
-                <div
-                    class="relative flex flex-col h-[600px] min-h-[600px] overflow-hidden bg-white border border-gray-100 shadow-xl rounded-2xl lg:h-[calc(100vh-140px)]">
-                    <!-- Output Header -->
-                    <div
-                        class="sticky top-0 z-10 flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100">
-                        <h2 class="text-lg font-bold text-gray-800">Generated Proposal</h2>
-                        <div class="flex space-x-3">
-                            <button id="copyBtn" disabled
-                                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 transition-colors border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 disabled:opacity-50">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 012-2v-8a2 2 0 01-2-2h-8a2 2 0 01-2 2v8a2 2 0 012 2z">
-                                    </path>
-                                </svg>
-                                Copy
-                            </button>
-                            <button id="downloadBtn" disabled
-                                class="flex items-center px-4 py-2 text-sm font-medium text-white transition-all bg-gray-900 rounded-lg shadow-md hover:bg-gray-800 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                </svg>
-                                Download PDF
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Output Content -->
-                    <div id="proposalOutput"
-                        class="flex-grow p-10 overflow-y-auto text-base leading-relaxed text-gray-600 whitespace-pre-wrap bg-white font-sans">
-                        <!-- Placeholder State -->
-                        <div id="emptyState" class="flex flex-col items-center justify-center h-full text-gray-300">
-                            <div class="flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-gray-50">
-                                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                                    </path>
-                                </svg>
-                            </div>
-                            <p class="text-lg font-medium text-center text-gray-400">Ready to create a proposal?</p>
-                            <p class="max-w-xs mt-2 text-sm text-center">Enter the project details on the left and we'll
-                                generate a professional document for you.</p>
-                        </div>
-                    </div>
-                </div>
+            <!-- Submit Button -->
+            <div class="pt-4">
+              <button type="submit" id="generateBtn"
+                class="flex items-center justify-center w-full px-6 py-4 text-lg font-bold text-white transition-all duration-200 bg-brand-600 rounded-xl hover:bg-brand-700 hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-brand-100">
+                <span>Generate Proposal</span>
+                <svg id="btnIcon" class="w-5 h-5 ml-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z">
+                  </path>
+                </svg>
+                <svg id="loadingSpinner" class="hidden w-5 h-5 ml-2 text-white animate-spin"
+                  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+              </button>
             </div>
+          </form>
         </div>
-    </main>
+      </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="app.js"></script>
+      <!-- Right Side: Output -->
+      <div class="flex flex-col h-full">
+        <div
+          class="relative flex flex-col h-[600px] min-h-[600px] overflow-hidden bg-white border border-gray-100 shadow-xl rounded-2xl lg:h-[calc(100vh-140px)]">
+          <!-- Output Header -->
+          <div class="sticky top-0 z-10 flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100">
+            <h2 class="text-lg font-bold text-gray-800">
+              Generated Proposal
+            </h2>
+            <div class="flex space-x-3">
+              <button id="copyBtn" disabled
+                class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 transition-colors border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 disabled:opacity-50">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 012-2v-8a2 2 0 01-2-2h-8a2 2 0 01-2 2v8a2 2 0 012 2z">
+                  </path>
+                </svg>
+                Copy
+              </button>
+              <button id="downloadBtn" disabled
+                class="flex items-center px-4 py-2 text-sm font-medium text-white transition-all bg-gray-900 rounded-lg shadow-md hover:bg-gray-800 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                Download PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Output Content -->
+          <div id="proposalOutput"
+            class="flex-grow p-10 overflow-y-auto text-base leading-relaxed text-gray-600 bg-white font-sans">
+            <!-- Placeholder State -->
+            <div id="emptyState" class="flex flex-col items-center justify-center h-full text-gray-300">
+              <div class="flex items-center justify-center w-20 h-20 mb-6 rounded-full bg-gray-50">
+                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                  </path>
+                </svg>
+              </div>
+              <p class="text-lg font-medium text-center text-gray-400">
+                Ready to create a proposal?
+              </p>
+              <p class="max-w-xs mt-2 text-sm text-center">
+                Enter the project details on the left and we'll generate a
+                professional document for you.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="app.js"></script>
 </body>
 
 </html>

@@ -1,142 +1,136 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('proposalForm');
-    const generateBtn = document.getElementById('generateBtn');
-    const btnIcon = document.getElementById('btnIcon');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const proposalOutput = document.getElementById('proposalOutput');
-    const emptyState = document.getElementById('emptyState');
-    const copyBtn = document.getElementById('copyBtn');
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("proposalForm");
+  const generateBtn = document.getElementById("generateBtn");
+  const btnIcon = document.getElementById("btnIcon");
+  const loadingSpinner = document.getElementById("loadingSpinner");
+  const proposalOutput = document.getElementById("proposalOutput");
+  const emptyState = document.getElementById("emptyState");
+  const copyBtn = document.getElementById("copyBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  // =========================
+  // FORM SUBMIT
+  // =========================
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-        // UI: Set Loading State
-        setLoading(true);
-        emptyState.classList.add('hidden');
-        proposalOutput.textContent = ''; // Clear previous content (or keep while loading?) -> Clear is better to show fresh start
-        proposalOutput.appendChild(createLoadingPlaceholder()); // Optional: Add a skeleton loader or just keep the spinner on button
+    emptyState.classList.add("hidden");
+    proposalOutput.innerHTML = "";
 
-        // Get Data
-        const formData = {
-            clientName: document.getElementById('clientName').value,
-            projectNeeds: document.getElementById('projectNeeds').value,
-            timeline: document.getElementById('timeline').value,
-            budget: document.getElementById('budget').value
-        };
+    const formData = {
+      clientName: document.getElementById("clientName").value,
+      projectNeeds: document.getElementById("projectNeeds").value,
+      timeline: document.getElementById("timeline").value,
+      budget: document.getElementById("budget").value,
+    };
 
-        try {
-            const response = await fetch('/api/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-            const data = await response.json();
+      const data = await res.json();
+      proposalOutput.innerHTML = data.proposal;
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to generate proposal');
-            }
-
-            // Render Result
-            proposalOutput.innerHTML = ''; // Remove skeleton
-            // formats the text with simple line breaks converted if needed, but whitespace-pre-wrap handles \n
-            proposalOutput.innerHTML = data.proposal;
-
-            // Enable Copy and Download
-            copyBtn.disabled = false;
-            document.getElementById('downloadBtn').disabled = false;
-
-        } catch (error) {
-            console.error(error);
-            proposalOutput.innerHTML = `<div class="text-red-500 p-4 bg-red-50 rounded-lg">Error: ${error.message}</div>`;
-            copyBtn.disabled = true;
-            document.getElementById('downloadBtn').disabled = true;
-        } finally {
-            setLoading(false);
-        }
-    });
-
-    // Copy to Clipboard Logic
-    copyBtn.addEventListener('click', () => {
-        if (!proposalOutput.textContent) return;
-
-        navigator.clipboard.writeText(proposalOutput.textContent).then(() => {
-            const originalText = copyBtn.innerHTML;
-            copyBtn.innerHTML = `<svg class="w-3.5 h-3.5 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
-            setTimeout(() => {
-                copyBtn.innerHTML = originalText;
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy caught', err);
-        });
-    });
-
-    // Download PDF Logic
-    const downloadBtn = document.getElementById('downloadBtn');
-
-    downloadBtn.addEventListener('click', () => {
-        if (!proposalOutput.textContent) return;
-
-        // Show loading state on button
-        const originalText = downloadBtn.innerHTML;
-        downloadBtn.innerHTML = `<svg class="animate-spin w-3.5 h-3.5 mr-1.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Saving...`;
-        downloadBtn.disabled = true;
-
-        // Clone the content to style it for print if needed, or just print active content
-        // For better PDF, we might want to wrap it in a container with a header
-        const element = proposalOutput;
-
-        const opt = {
-            margin: 1,
-            filename: 'FutureDesk_Proposal.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-
-        // New Promise-based usage:
-        html2pdf().set(opt).from(element).save().then(() => {
-            downloadBtn.innerHTML = originalText;
-            downloadBtn.disabled = false;
-        }).catch(err => {
-            console.error('PDF Generation Error:', err);
-            downloadBtn.innerHTML = 'Error';
-            setTimeout(() => {
-                downloadBtn.innerHTML = originalText;
-                downloadBtn.disabled = false;
-            }, 3000);
-        });
-    });
-
-    function setLoading(isLoading) {
-        if (isLoading) {
-            generateBtn.disabled = true;
-            generateBtn.classList.add('opacity-75', 'cursor-not-allowed');
-            btnIcon.classList.add('hidden');
-            loadingSpinner.classList.remove('hidden');
-        } else {
-            generateBtn.disabled = false;
-            generateBtn.classList.remove('opacity-75', 'cursor-not-allowed');
-            btnIcon.classList.remove('hidden');
-            loadingSpinner.classList.add('hidden');
-        }
+      copyBtn.disabled = false;
+      downloadBtn.disabled = false;
+    } catch (err) {
+      proposalOutput.innerHTML =
+        `<p class="text-red-600">Failed to generate proposal</p>`;
+    } finally {
+      setLoading(false);
     }
+  });
 
-    function createLoadingPlaceholder() {
-        const div = document.createElement('div');
-        div.className = 'animate-pulse space-y-4';
-        div.innerHTML = `
-            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div class="h-4 bg-gray-200 rounded"></div>
-            <div class="h-4 bg-gray-200 rounded"></div>
-            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div class="space-y-2 pt-4">
-                <div class="h-4 bg-gray-200 rounded"></div>
-                <div class="h-4 bg-gray-200 rounded w-5/6"></div>
-            </div>
-        `;
-        return div;
-    }
+  // =========================
+  // COPY
+  // =========================
+  copyBtn.addEventListener("click", () => {
+    navigator.clipboard.writeText(proposalOutput.innerText);
+    copyBtn.innerText = "Copied ✓";
+    setTimeout(() => (copyBtn.innerText = "Copy"), 2000);
+  });
+
+  // =========================
+  // DOWNLOAD PDF (FIXED)
+  // =========================
+  downloadBtn.addEventListener("click", async () => {
+    downloadBtn.disabled = true;
+    downloadBtn.innerText = "Preparing...";
+
+    // 🔥 CREATE CLEAN PDF ROOT (NO SCROLL / NO STICKY)
+    const pdfRoot = document.createElement("div");
+    pdfRoot.style.width = "800px";
+    pdfRoot.style.padding = "40px";
+    pdfRoot.style.background = "#ffffff";
+    pdfRoot.style.color = "#1f2937";
+    pdfRoot.style.fontFamily = "Inter, sans-serif";
+
+    // LOGO
+    const logo = document.createElement("img");
+    logo.src = document.getElementById("pdfLogo").src;
+    logo.style.width = "150px";
+    logo.style.display = "block";
+    logo.style.margin = "0 auto 30px";
+    pdfRoot.appendChild(logo);
+
+    // CONTENT (PURE HTML, NO SCROLL)
+    const content = document.createElement("div");
+    content.innerHTML = proposalOutput.innerHTML;
+
+    // REMOVE EMPTY STATE IF EXISTS
+    const empty = content.querySelector("#emptyState");
+    if (empty) empty.remove();
+
+    // FORCE VISIBILITY (CRITICAL FIX)
+    content.querySelectorAll("*").forEach((el) => {
+      el.style.overflow = "visible";
+      el.style.maxHeight = "none";
+    });
+
+    pdfRoot.appendChild(content);
+
+    // ATTACH TO DOM (MANDATORY)
+    document.body.appendChild(pdfRoot);
+
+    // WAIT FOR LOGO LOAD
+    await new Promise((resolve) => {
+      if (logo.complete) resolve();
+      else logo.onload = resolve;
+    });
+
+    // GENERATE PDF
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: "FutureDesk_Proposal.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          windowWidth: 1200,
+        },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .from(pdfRoot)
+      .save()
+      .then(() => {
+        document.body.removeChild(pdfRoot);
+        downloadBtn.disabled = false;
+        downloadBtn.innerText = "Download PDF";
+      });
+  });
+
+  // =========================
+  // HELPERS
+  // =========================
+  function setLoading(state) {
+    generateBtn.disabled = state;
+    btnIcon.classList.toggle("hidden", state);
+    loadingSpinner.classList.toggle("hidden", !state);
+  }
 });

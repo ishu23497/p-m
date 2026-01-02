@@ -17,205 +17,241 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-// Professional Fallback Proposal Generator
+// Helper: Common CSS for PDF safety
+const SEPARATOR = `<hr style="border: 0; border-top: 1px solid #ccc; margin: 30px 0;">`;
+
+// Helper to format the final HTML wrapper
+// Helper to format the final HTML wrapper
+function formatProposalHtml(contentHtml) {
+    return `
+    <div style="text-align:center; margin-bottom:24px;">
+      <img 
+        src="https://futuredesks.com/wp-content/uploads/2024/12/Untitled-design-58.png"
+        alt="FutureDesk Logo"
+        style="width:150px; display:block; margin:0 auto 16px;"
+      />
+      <div style="font-weight:600; font-size:18px;">FUTUREDESK SERVICES</div>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #ccc; margin: 24px 0;">
+
+    ${contentHtml}
+    `;
+}
+
+// Professional Fallback Proposal Generator (Dynamic)
+// Strictly follows the 19-section structure request
 function generateMockProposal(data) {
-    // Generate a professional-sounding project name
-    const projectName = `${data.clientName} Digital Transformation System`;
-
-    // Logo HTML injection (Relative path for public folder)
-    const logoHtml = `<img src="/futuredesk-logo.png" style="display: block; margin: 0 auto 24px auto; width: 160px; height: auto;" alt="FutureDesk Logo" />`;
-
-    return `${logoHtml}
-Project Name: ${projectName}
-Product Type: Enterprise Software Solution
-Prepared By: FutureDesk Services
-Budget: ${data.budget}
-Timeline: ${data.timeline}
-
----
-
-1. Project Overview
-
-FutureDesk Services is proud to present this proposal for ${data.clientName}. This project aims to deliver a high-performance, scalable software solution designed to address your specific operational requirements.
-
-Based on your needs for "${data.projectNeeds}", our solution will streamline workflows, enhance data visibility, and provide a seamless user experience for all stakeholders. This platform will be built with a focus on security, reliability, and long-term maintainability.
-
-
-
-2. Problem Statement
-
-Organizations often face challenges due to:
-- Fragmented data across multiple disconnected tools.
-- Manual processes that lead to operational inefficiencies.
-- Lack of real-time reporting and actionable insights.
-
-Currently, ${data.clientName} requires a robust system to overcome these bottlenecks. Our solution directly addresses these pain points by centralizing core functions and automating critical tasks.
-
-
-
-3. Product Vision
-
-Our vision is to empower ${data.clientName} with a state-of-the-art digital ecosystem. We aim to move beyond simple digitization to create an intelligent, responsive platform where every interaction adds value.
-
-We envision a system that is not only functional but also intuitive—reducing training time and maximizing user adoption from day one.
-
-
-
-4. User Roles
-
-- Super Admin – Full system control, user management, and global settings.
-- Manager – Access to reporting dashboards, team oversight, and approval workflows.
-- Standard User – Daily operational tasks, data entry, and personal status tracking.
-- Auditor – Read-only access for compliance and historical data review.
-
-
-
-5. Application Flow & Authentication
-
-Onboarding & Access
-- Secure login via Email/Password or Single Sign-On (SSO).
-- Multi-Factor Authentication (MFA) for enhanced security.
-- Role-based redirection upon login (Admins to Dashboard, Users to Tasks).
-
-Workflow
-1. User logs in safely.
-2. System verifies credentials and retrieves permission set.
-3. User lands on a personalized dashboard highlighting pending actions.
-
-
-
-6. Core Features – Primary User (Standard User)
-
-Daily Operations Dashboard
-- Quick summary of assigned tasks and status updates.
-- One-click actions for common workflows.
-
-Data Management
-- Intuitive forms for data entry with real-time validation.
-- Search and filter capabilities to locate records instantly.
-- Export functionality for offline analysis.
-
-
-
-7. Core Features – Secondary User (Admin/Manager)
-
-System Oversight
-- comprehensive view of system health and user activity.
-- Management of user accounts, roles, and permissions.
-
-Reporting & Analytics
-- Visual charts (bar, line, pie) showcasing key performance indicators.
-- Automated report generation and email distribution.
-- Audit logs tracking critical system changes.
-
-
-
-8. Map / System / Workflow Logic
-
-Centralized Logic Engine
-- The system uses a centralized controller to manage business rules.
-- Data flows securely from the frontend to the backend API services.
-- Automated triggers process background jobs (e.g., notifications, data archiving) without interrupting the user experience.
-
-
-
-9. Notification & Alert Logic
-
-- Real-time Alerts: In-app notifications for critical status changes.
-- Email Digest: Daily or weekly summaries of activity.
-- Triggers: Notifications fire when tasks are overdue, approvals are requested, or system anomalies are detected.
-
-
-
-10. Admin Dashboard
-
-Control Center
-- Live monitoring of active users and server performance.
-- Configuration of system-wide settings (e.g., branding, timezones).
-- User Management: Add/Edit/Deactivate users with immediate effect.
-- Security Audit: View login history and failed access attempts.
-
-
-11. Out of Scope (MVP)
-
-- Native mobile applications (Android/iOS) - Web Responsive only for Phase 1.
-- Offline mode functionality.
-- AI-driven predictive analytics (slated for Phase 2).
-- Legacy system data migration (handled as a separate service request).
-
-
-
-12. Success Criteria
-
-- Successful deployment of the platform with 99.9% uptime.
-- 50% reduction in time spent on manual administrative tasks.
-- Positive user feedback regarding ease of use and speed.
-- All critical security compliance standards met.
-
-
-
-13. Technology Stack
-
-- Frontend: React.js / Next.js (Modern, fast, and responsive)
-- Backend: Node.js with Express (Scalable API architecture)
-- Database: PostgreSQL (Reliable, structured data storage)
-- Authentication: JWT & OAuth 2.0
-- Cloud Infrastructure: AWS or Google Cloud Platform
-- Deployment: Docker & CI/CD Pipelines
-
-
-
-14. Project Timeline
-
-Phase 1: Discovery & Design (Weeks 1-2)
-Requirement gathering, wireframing, and UI/UX design.
-
-Phase 2: Core Development (Weeks 3-6)
-Database setup, API development, and frontend integration.
-
-Phase 3: Testing & QA (Week 7)
-Unit testing, integration testing, and user acceptance testing (UAT).
-
-Phase 4: Deployment & Training (Week 8)
-Production launch, documentation handover, and admin training.
-
-
-
-15. Project Cost
-
-Total Budget: ${data.budget}
-
-Note: Infrastructure costs (server hosting, domain) are excluded and billed directly to the client.
-
-
-
-16. Payment Milestones
-
-- 30% – Initialization & Design Sign-off
-- 40% – Development Completion (Beta Release)
-- 30% – Final Delivery & Go-Live
-
-
-
-17. Post-Launch Support
-
-Duration: 30 Days of dedicated hypercare support.
-Scope: Bug fixes and critical performance monitoring.
-Additional maintenance packages available upon request.
-
-
-
-18. Conclusion
-
-FutureDesk Services is committed to your success. This proposal outlines a clear path to transforming your digital capabilities with ${data.clientName}. We look forward to partnering with you to bring this vision to life.
-`;
+    const { clientName, budget, timeline, projectNeeds } = data;
+
+    const content = `
+    <!-- 1. Project Details -->
+    <div class="pdf-section">
+        <h3><strong>1. Project Details</strong></h3>
+        <p>
+            <strong>Project Name:</strong> ${clientName} Digital Transformation System<br>
+            <strong>Product Type:</strong> Enterprise Software Solution<br>
+            <strong>Prepared By:</strong> FutureDesk Services<br>
+            <strong>Budget:</strong> ${budget}<br>
+            <strong>Timeline:</strong> ${timeline}
+        </p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 2. Project Overview -->
+    <div class="pdf-section">
+        <h3><strong>2. Project Overview</strong></h3>
+        <p>FutureDesk Services is pleased to present this proposal for <strong>${clientName}</strong>. This document outlines a strategic approach to developing a custom software solution tailored to your requirement: "${projectNeeds}".</p>
+        <p>Our solution is designed to streamline operations, enhance data visibility, and provide a scalable foundation for future growth.</p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 3. Problem Statement -->
+    <div class="pdf-section">
+        <h3><strong>3. Problem Statement</strong></h3>
+        <p>Key operational challenges include:</p>
+        <ul>
+            <li>Inefficient manual processes leading to delays.</li>
+            <li>Fragmented data sources causing visibility gaps.</li>
+            <li>Lack of a unified platform for real-time decision making.</li>
+        </ul>
+        <p>This proposal addresses these issues directly through automation and centralization.</p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 4. Product Vision -->
+    <div class="pdf-section">
+        <h3><strong>4. Product Vision</strong></h3>
+        <p>Our vision is to empower ${clientName} with an intelligent, enterprise-grade platform. We aim to replace complexity with intuitive design, ensuring high adoption rates and immediate business value.</p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 5. User Roles -->
+    <div class="pdf-section">
+        <h3><strong>5. User Roles</strong></h3>
+        <ul>
+            <li><strong>Super Admin:</strong> Full system control, configuration, and security management.</li>
+            <li><strong>Manager:</strong> Team oversight, approval workflows, and reporting.</li>
+            <li><strong>Standard User:</strong> Daily operational tasks and data entry.</li>
+            <li><strong>Auditor:</strong> Read-only access for compliance and historical review.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 6. Application Flow & Authentication -->
+    <div class="pdf-section">
+        <h3><strong>6. Application Flow & Authentication</strong></h3>
+        <p>Security is paramount. The system features:</p>
+        <ul>
+            <li><strong>Authentication:</strong> Secure login via email/password or SSO.</li>
+            <li><strong>Access Control:</strong> Role-based permissions to ensure data integrity.</li>
+            <li><strong>Flow:</strong> Users are routed to role-specific dashboards immediately upon login.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 7. Core Features – Primary User -->
+    <div class="pdf-section">
+        <h3><strong>7. Core Features – Primary User</strong></h3>
+        <ul>
+            <li><strong>Personalized Dashboard:</strong> Instant access to assigned tasks.</li>
+            <li><strong>Data Management:</strong> Intuitive forms with validation.</li>
+            <li><strong>Workflow Tools:</strong> Status tracking and updates.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 8. Core Features – Admin / Manager -->
+    <div class="pdf-section">
+        <h3><strong>8. Core Features – Admin / Manager</strong></h3>
+        <ul>
+            <li><strong>User Management:</strong> Add, edit, or deactivate accounts.</li>
+            <li><strong>System Monitoring:</strong> Real-time activity logs.</li>
+            <li><strong>Reporting:</strong> Exportable analytics and performance metrics.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 9. System Architecture & Workflow Logic -->
+    <div class="pdf-section">
+        <h3><strong>9. System Architecture & Workflow Logic</strong></h3>
+        <p>The solution uses a modern, scalable architecture:</p>
+        <ul>
+            <li><strong>Frontend:</strong> Responsive web interface.</li>
+            <li><strong>Backend:</strong> Secure API layer for logic processing.</li>
+            <li><strong>Database:</strong> Relational storage for structured data.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 10. Notifications & Alerts -->
+    <div class="pdf-section">
+        <h3><strong>10. Notifications & Alerts</strong></h3>
+        <ul>
+            <li><strong>Real-time:</strong> In-app alerts for immediate action.</li>
+            <li><strong>Email:</strong> Summaries and critical system warnings.</li>
+            <li><strong>Triggers:</strong> Automated notifications based on workflow status.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 11. Admin Dashboard -->
+    <div class="pdf-section">
+        <h3><strong>11. Admin Dashboard</strong></h3>
+        <p>A centralized control center featuring:</p>
+        <ul>
+            <li>System health overview.</li>
+            <li>User activity analytics.</li>
+            <li>Security audit logs.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 12. Out of Scope (MVP) -->
+    <div class="pdf-section">
+        <h3><strong>12. Out of Scope (MVP)</strong></h3>
+        <ul>
+            <li>Native mobile apps (iOS/Android).</li>
+            <li>Offline mode.</li>
+            <li>Legacy data migration.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 13. Success Criteria -->
+    <div class="pdf-section">
+        <h3><strong>13. Success Criteria</strong></h3>
+        <ul>
+            <li>Successful production deployment.</li>
+            <li>Zero critical bugs at launch.</li>
+            <li>Positive user acceptance feedback.</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 14. Technology Stack -->
+    <div class="pdf-section">
+        <h3><strong>14. Technology Stack</strong></h3>
+        <ul>
+            <li><strong>Frontend:</strong> React.js / Next.js</li>
+            <li><strong>Backend:</strong> Node.js (Express)</li>
+            <li><strong>Database:</strong> PostgreSQL</li>
+            <li><strong>Authentication:</strong> JWT / OAuth</li>
+            <li><strong>Cloud:</strong> AWS / Google Cloud</li>
+            <li><strong>Deployment:</strong> CI/CD Pipelines</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 15. Project Timeline -->
+    <div class="pdf-section">
+        <h3><strong>15. Project Timeline</strong></h3>
+        <p><strong>Phase 1: Discovery (Weeks 1-2)</strong><br>Requirements and Design.</p>
+        <p><strong>Phase 2: Development (Weeks 3-6)</strong><br>Core implementation.</p>
+        <p><strong>Phase 3: Testing (Week 7)</strong><br>QA and UAT.</p>
+        <p><strong>Phase 4: Launch (Week 8)</strong><br>Deployment and Training.</p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 16. Project Cost -->
+    <div class="pdf-section">
+        <h3><strong>16. Project Cost</strong></h3>
+        <p><strong>Total Budget:</strong> ${budget}</p>
+        <p><em>Note: Excludes hosting and third-party API costs.</em></p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 17. Payment Milestones -->
+    <div class="pdf-section">
+        <h3><strong>17. Payment Milestones</strong></h3>
+        <ul>
+            <li><strong>30%</strong> - Initiation</li>
+            <li><strong>40%</strong> - Development Benchmark</li>
+            <li><strong>30%</strong> - Completion</li>
+        </ul>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 18. Post-Launch Support -->
+    <div class="pdf-section">
+        <h3><strong>18. Post-Launch Support</strong></h3>
+        <p>30 days of comprehensive support covers bug fixes, performance monitoring, and stability assurance.</p>
+        ${SEPARATOR}
+    </div>
+
+    <!-- 19. Conclusion -->
+    <div class="pdf-section">
+        <h3><strong>19. Conclusion</strong></h3>
+        <p>FutureDesk Services is committed to your success. We look forward to delivering a solution that not only meets your requirements but drives significant operational value.</p>
+    </div>
+    `;
+
+    return formatProposalHtml(content);
 }
 
 // Routes
 app.post('/api/generate', async (req, res) => {
     const { clientName, projectNeeds, timeline, budget } = req.body;
 
-    // Basic Validation
     if (!clientName || !projectNeeds || !timeline || !budget) {
         return res.status(400).json({ error: 'All fields are required' });
     }
@@ -223,16 +259,45 @@ app.post('/api/generate', async (req, res) => {
     try {
         if (!process.env.OPENAI_API_KEY) throw new Error('API Key Missing');
 
-        const prompt = `You are a professional business proposal writer. Generate a formal, client-ready proposal using the provided client name, project needs, timeline, and budget. Do not mention AI.
-        
-        Client Name: ${clientName}
-        Project Requirements: ${projectNeeds}
+        const prompt = `You are a Professional Enterprise Proposal Writer for "FutureDesk Services".
+        Generate a COMPLETELY FORMATTED HTML PROPOSAL.
+
+        INPUT:
+        Client: ${clientName}
+        Requirements: ${projectNeeds}
         Timeline: ${timeline}
         Budget: ${budget}
-        
-        Format the proposal with clear sections (e.g., Executive Summary, Scope of Work, Timeline, Budget Breakdown, Terms).
-        
-        IMPORTANT: Start directly with "Project Name: ..." Do NOT include any "PROPOSAL FORMAT" line or separator lines (====).`;
+
+        STRICT RULES:
+        1. Return ONLY valid HTML (No markdown, no <html>/<body> tags).
+        2. DO NOT include the logo/header (I will add it). Start directly with Section 1.
+        3. Wrap EVERY numbered section in <div class="pdf-section">...</div>.
+        4. Use <h3> for Section Titles.
+        5. Add ${SEPARATOR} at the end of every section (except the last).
+        6. NO tables (use clean lists/text).
+        7. Professional, Enterprise tone.
+
+        SECTIONS (Must match EXACTLY):
+        1. Project Details (Include Name, Type, Prepared By, Budget, Timeline)
+        2. Project Overview
+        3. Problem Statement
+        4. Product Vision
+        5. User Roles (Super Admin, Manager, Standard User, Auditor)
+        6. Application Flow & Authentication
+        7. Core Features – Primary User
+        8. Core Features – Admin / Manager
+        9. System Architecture & Workflow Logic
+        10. Notifications & Alerts
+        11. Admin Dashboard
+        12. Out of Scope (MVP)
+        13. Success Criteria
+        14. Technology Stack
+        15. Project Timeline
+        16. Project Cost
+        17. Payment Milestones
+        18. Post-Launch Support
+        19. Conclusion
+        `;
 
         const completion = await openai.chat.completions.create({
             messages: [{ role: 'system', content: prompt }],
@@ -243,27 +308,22 @@ app.post('/api/generate', async (req, res) => {
             throw new Error('No content received from OpenAI');
         }
 
-        // Inject Logo into Real AI Response
-        const logoHtml = `<img src="/futuredesk-logo.png" style="display: block; margin: 0 auto 24px auto; width: 160px; height: auto;" alt="FutureDesk Logo" />\n`;
-        const finalProposal = logoHtml + completion.choices[0].message.content;
+        let contentRaw = completion.choices[0].message.content
+            .replace(/```html/g, '')
+            .replace(/```/g, '');
+
+        const finalProposal = formatProposalHtml(contentRaw);
 
         res.json({ proposal: finalProposal });
 
     } catch (error) {
         console.error('OpenAI API Error:', error);
+        console.log('Switching to Mock Mode.');
 
-        // FALLBACK: Return professional mock response for ANY error
-        // minimizing disruption for the user.
-        console.log('Switching to Demo Mode due to error.');
         const mockProposal = generateMockProposal({ clientName, projectNeeds, timeline, budget });
 
-        // Simulate network delay to make it feel real
         await new Promise(resolve => setTimeout(resolve, 2000));
-
-        return res.json({
-            proposal: mockProposal,
-            isMock: true
-        });
+        return res.json({ proposal: mockProposal, isMock: true });
     }
 });
 
